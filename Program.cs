@@ -17,7 +17,7 @@ namespace Theatre
                 Console.WriteLine("3 — кількість вистав за жанрами і днями тижня");
                 Console.WriteLine("0 — вихід");
                 Console.Write("Ваш вибір: ");
-                string choice = Console.ReadLine(); // string, щоб Enter чи літера не валили програму
+                string? choice = Console.ReadLine(); // string, щоб Enter чи літера не валили програму
                 Console.WriteLine();
 
                 switch (choice)
@@ -148,7 +148,7 @@ namespace Theatre
                 static int ReadSize(string prompt, int max)
                 {
                     Console.Write($"{prompt} (1–{max}): ");
-                    string input = Console.ReadLine();
+                    string? input = Console.ReadLine();
 
                     if (!int.TryParse(input, out int value))
                     {
@@ -167,8 +167,9 @@ namespace Theatre
                     }
                     return value;
                 }
+                // Лабораторна 7: каркас застосунку «Театр»
             }
-            
+
         }
     }
 }
