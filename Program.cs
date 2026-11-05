@@ -30,7 +30,7 @@ namespace Theatre
                         ShowRevenueTable();
                         break;
                     case "3":
-                        Console.WriteLine("Поки не зроблено.");
+                        ShowGenreTable();
                         break;
                     case "0":
                         running = false; // а не break: break завершив би лише case
@@ -41,6 +41,8 @@ namespace Theatre
                         Pause();
                         break;
                 }
+
+
                 // Пауза, щоб результат не зник відразу після дії
                 static void Pause()
                 {
@@ -65,6 +67,8 @@ namespace Theatre
                     Console.WriteLine("  int      продано квитків");
                     Console.WriteLine("Підсумкова величина: найкасовіші вистави сезону.");
                 }
+
+
                 // Табулювання: виторг залежно від ціни квитка
                 static void ShowRevenueTable()
                 {
@@ -83,6 +87,41 @@ namespace Theatre
                         double revenue = price * sold;
                         double withDiscount = revenue * (1 - discount);
                         Console.WriteLine($"{price,8:F2}{revenue,12:F2}{withDiscount,14:F2}");
+                    }
+
+                }
+
+
+                // Таблиця з двома входами: рядки — жанри, стовпці — дні тижня
+                static void ShowGenreTable()
+                {
+                    string[] genres = { "Драма", "Комедія", "Мюзикл", "Трагедія", "Казка" };
+                    string[] days = { "Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Нд" };
+                    int rows = genres.Length;
+                    int cols = days.Length;
+
+                    // Шапка друкується до зовнішнього циклу
+                    Console.Write(new string(' ', 10)); // зсув на ширину стовпця з назвами
+                    for (int c = 0; c < cols; c++)
+                    {
+                        Console.Write($"{days[c],6}");
+                    }
+                    Console.WriteLine($"{"Разом",8}");
+
+                    for (int r = 0; r < rows; r++)
+                    {
+                        int rowTotal = 0; // обнуляється для кожного рядка, тому оголошений тут
+                        Console.Write($"{genres[r],-10}");
+
+                        for (int c = 0; c < cols; c++)
+                        {
+                            // Реальних даних ще немає, тому умовна кількість вистав
+                            int value = (r * 3 + c * 2) % 5 + 1;
+                            Console.Write($"{value,6}"); // Write, а не WriteLine
+                            rowTotal += value;
+                        }
+
+                        Console.WriteLine($"{rowTotal,8}"); // перехід на новий рядок — після внутрішнього циклу
                     }
                 }
             }
