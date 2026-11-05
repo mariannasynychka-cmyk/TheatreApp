@@ -27,7 +27,7 @@ namespace Theatre
                         Pause();
                         break;
                     case "2":
-                        Console.WriteLine("Поки не зроблено.");
+                        ShowRevenueTable();
                         break;
                     case "3":
                         Console.WriteLine("Поки не зроблено.");
@@ -64,6 +64,26 @@ namespace Theatre
                     Console.WriteLine("  double   ціна квитка");
                     Console.WriteLine("  int      продано квитків");
                     Console.WriteLine("Підсумкова величина: найкасовіші вистави сезону.");
+                }
+                // Табулювання: виторг залежно від ціни квитка
+                static void ShowRevenueTable()
+                {
+                    double from = 150;      // початок проміжку
+                    double to = 250;        // кінець проміжку
+                    double step = 12.5;     // дробовий крок
+                    int sold = 120;         // скільки квитків продано (стала для таблиці)
+                    double discount = 0.10; // знижка 10%
+
+                    Console.WriteLine($"Виторг при {sold} проданих квитках");
+                    Console.WriteLine($"{"Ціна",8}{"Виторг",12}{"Зі знижкою",14}");
+
+                    // 1e-9 — запас, щоб остання стрічка не зникла через неточність дробових чисел
+                    for (double price = from; price <= to + 1e-9; price += step)
+                    {
+                        double revenue = price * sold;
+                        double withDiscount = revenue * (1 - discount);
+                        Console.WriteLine($"{price,8:F2}{revenue,12:F2}{withDiscount,14:F2}");
+                    }
                 }
             }
         }
