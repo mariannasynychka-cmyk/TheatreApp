@@ -97,8 +97,14 @@ namespace Theatre
                 {
                     string[] genres = { "Драма", "Комедія", "Мюзикл", "Трагедія", "Казка" };
                     string[] days = { "Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Нд" };
-                    int rows = genres.Length;
-                    int cols = days.Length;
+
+                    // Межі таблиці задає користувач
+                    int rows = ReadSize("Скільки жанрів (рядків)", genres.Length);
+                    if (rows < 0) return; // помилка вже показана, нічого не малюємо
+                    int cols = ReadSize("Скільки днів (стовпців)", days.Length);
+                    if (cols < 0) return;
+
+                    Console.WriteLine();
 
                     // Шапка друкується до зовнішнього циклу
                     Console.Write(new string(' ', 10)); // зсув на ширину стовпця з назвами
@@ -107,6 +113,9 @@ namespace Theatre
                         Console.Write($"{days[c],6}");
                     }
                     Console.WriteLine($"{"Разом",8}");
+
+                    int[] colTotals = new int[cols]; // підсумки по стовпцях
+                    int grandTotal = 0;              // загальний підсумок
 
                     for (int r = 0; r < rows; r++)
                     {
@@ -119,12 +128,47 @@ namespace Theatre
                             int value = (r * 3 + c * 2) % 5 + 1;
                             Console.Write($"{value,6}"); // Write, а не WriteLine
                             rowTotal += value;
+                            colTotals[c] += value;
                         }
 
+                        grandTotal += rowTotal;
                         Console.WriteLine($"{rowTotal,8}"); // перехід на новий рядок — після внутрішнього циклу
                     }
+
+                    // Рядок підсумків під таблицею
+                    Console.Write($"{"Разом",-10}");
+                    for (int c = 0; c < cols; c++)
+                    {
+                        Console.Write($"{colTotals[c],6}");
+                    }
+                    Console.WriteLine($"{grandTotal,8}");
+                }
+
+                // Читає розмір таблиці. Повертає -1, якщо ввід неправильний.
+                static int ReadSize(string prompt, int max)
+                {
+                    Console.Write($"{prompt} (1–{max}): ");
+                    string input = Console.ReadLine();
+
+                    if (!int.TryParse(input, out int value))
+                    {
+                        Console.WriteLine("Помилка: це не число.");
+                        return -1;
+                    }
+                    if (value <= 0)
+                    {
+                        Console.WriteLine("Помилка: число має бути більше нуля.");
+                        return -1;
+                    }
+                    if (value > max)
+                    {
+                        Console.WriteLine($"Помилка: максимум {max}.");
+                        return -1;
+                    }
+                    return value;
                 }
             }
+            
         }
     }
 }
