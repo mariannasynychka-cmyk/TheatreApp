@@ -11,16 +11,12 @@ namespace Theatre
 
             while (running)
             {
-                Console.WriteLine("=== Театр ===");
-                Console.WriteLine("1 — довідка");
-                Console.WriteLine("2 — таблиця виторгу залежно від ціни квитка");
-                Console.WriteLine("3 — кількість вистав за жанрами і днями тижня");
-                Console.WriteLine("0 — вихід");
-                Console.Write("Ваш вибір: ");
+                ShowMenu();
                 string? choice = Console.ReadLine(); // string, щоб Enter чи літера не валили програму
-                Console.WriteLine();
+            
+            // Виводить головне меню
 
-                switch (choice)
+            switch (choice)
                 {
                     case "1":
                         ShowAbout();
@@ -28,9 +24,11 @@ namespace Theatre
                         break;
                     case "2":
                         ShowRevenueTable();
+                        Pause();
                         break;
                     case "3":
                         ShowGenreTable();
+                        Pause();
                         break;
                     case "0":
                         running = false; // а не break: break завершив би лише case
@@ -40,6 +38,16 @@ namespace Theatre
                         Console.WriteLine("Немає такого пункту. Спробуйте ще раз.");
                         Pause();
                         break;
+                }
+
+                static void ShowMenu() // Виводить головне меню
+                {
+                    Console.WriteLine("=== Театр ===");
+                    Console.WriteLine("1 — довідка");
+                    Console.WriteLine("2 — таблиця виторгу залежно від ціни квитка");
+                    Console.WriteLine("3 — кількість вистав за жанрами і днями тижня");
+                    Console.WriteLine("0 — вихід");
+                    Console.Write("Ваш вибір: ");
                 }
 
 
