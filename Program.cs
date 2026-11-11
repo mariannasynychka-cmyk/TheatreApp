@@ -23,7 +23,7 @@ namespace Theatre
                         Pause();
                         break;
                     case "2":
-                        ShowRevenueTable();
+                        PrintRevenueTable(150, 250, 12.5);
                         Pause();
                         break;
                     case "3":
@@ -76,13 +76,21 @@ namespace Theatre
                     Console.WriteLine("Підсумкова величина: найкасовіші вистави сезону.");
                 }
 
+                // Рахує виторг за ціною квитка й кількістю проданих. Нічого не виводить.
+                static double CalculateRevenue(double price, int sold)
+                {
+                    return price * sold;
+                }
 
                 // Табулювання: виторг залежно від ціни квитка
-                static void ShowRevenueTable()
+                static void PrintRevenueTable(double from, double to, double step)
                 {
-                    double from = 150;      // початок проміжку
-                    double to = 250;        // кінець проміжку
-                    double step = 12.5;     // дробовий крок
+                    if (from > to)
+                    {
+                        Console.WriteLine("Початок більший за кінець — нема чого виводити.");
+                        return; // рання відмова: далі не йдемо
+                    }
+
                     int sold = 120;         // скільки квитків продано (стала для таблиці)
                     double discount = 0.10; // знижка 10%
 
@@ -92,7 +100,7 @@ namespace Theatre
                     // 1e-9 — запас, щоб остання стрічка не зникла через неточність дробових чисел
                     for (double price = from; price <= to + 1e-9; price += step)
                     {
-                        double revenue = price * sold;
+                        double revenue = CalculateRevenue(price, sold);
                         double withDiscount = revenue * (1 - discount);
                         Console.WriteLine($"{price,8:F2}{revenue,12:F2}{withDiscount,14:F2}");
                     }
