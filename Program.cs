@@ -4,6 +4,8 @@ namespace Theatre
 {
     internal class Program
     {
+        const int GenreCount = 5; // Скільки жанрів і днів є в таблиці з двома  входами
+        const int DayCount = 7;
         static void Main(string[] args)
         {
             Console.OutputEncoding = Encoding.UTF8;
@@ -80,6 +82,12 @@ namespace Theatre
                 static double CalculateRevenue(double price, int sold)
                 {
                     return price * sold;
+                } 
+
+                // Умовна кількість вистав жанру genre у день day (реальних даних ще немає)
+                static int GetPerformanceCount(int genre, int day)
+                {
+                    return (genre * 3 + day * 2) % 5 + 1;
                 }
 
                 // Табулювання: виторг залежно від ціни квитка
@@ -107,18 +115,23 @@ namespace Theatre
 
                 }
 
+                // питає розміри таблиці й віддає їх методу, що її будує
+                static void ShowGenreTable()
+                {
+                    int rows = ReadSize("Скільки жанрів (рядків)", GenreCount);
+                    int cols = ReadSize("Скільки днів (стовпців)", DayCount);
+                    if (rows < 0 || cols < 0) return;
+                    Console.WriteLine();
+                    PrintGenreTable(rows, cols);
+                }
 
                 // Таблиця з двома входами: рядки — жанри, стовпці — дні тижня
-                static void ShowGenreTable()
+                static void PrintGenreTable(int rows, int cols)
                 {
                     string[] genres = { "Драма", "Комедія", "Мюзикл", "Трагедія", "Казка" };
                     string[] days = { "Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Нд" };
 
-                    // Межі таблиці задає користувач
-                    int rows = ReadSize("Скільки жанрів (рядків)", genres.Length);
-                    if (rows < 0) return; // помилка вже показана, нічого не малюємо
-                    int cols = ReadSize("Скільки днів (стовпців)", days.Length);
-                    if (cols < 0) return;
+                
 
                     Console.WriteLine();
 
@@ -140,8 +153,7 @@ namespace Theatre
 
                         for (int c = 0; c < cols; c++)
                         {
-                            // Реальних даних ще немає, тому умовна кількість вистав
-                            int value = (r * 3 + c * 2) % 5 + 1;
+                            int value = GetPerformanceCount(r, c);
                             Console.Write($"{value,6}"); // Write, а не WriteLine
                             rowTotal += value;
                             colTotals[c] += value;
