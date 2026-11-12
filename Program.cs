@@ -19,18 +19,9 @@ namespace Theatre
 
                 switch (choice)
                 {
-                    case "1":
-                        ShowAbout();
-                        Pause();
-                        break;
-                    case "2":
-                        ShowRevenueTable();
-                        Pause();
-                        break;
-                    case "3":
-                        ShowGenreTable();
-                        Pause();
-                        break;
+                    case "1": ShowAbout(); Pause(); break;
+                    case "2": ShowRevenueTable(); Pause(); break;
+                    case "3": ShowGenreTable(); Pause(); break;
                     case "0":
                         running = false; // а не break: break завершив би лише case
                         Console.WriteLine("До побачення.");
@@ -43,7 +34,6 @@ namespace Theatre
             }
         }
 
-
         static void ShowMenu() // Виводить головне меню
         {
             Console.WriteLine("=== Театр ===");
@@ -53,7 +43,6 @@ namespace Theatre
             Console.WriteLine("0 — вихід");
             Console.Write("Ваш вибір: ");
         }
-
 
         // Пауза, щоб результат не зник відразу після дії
         static void Pause()
@@ -114,7 +103,6 @@ namespace Theatre
                 double withDiscount = revenue * (1 - discount);
                 Console.WriteLine($"{price,8:F2}{revenue,12:F2}{withDiscount,14:F2}");
             }
-
         }
 
         // питає розміри таблиці й віддає їх методу, що її будує
@@ -155,7 +143,6 @@ namespace Theatre
                     rowTotal += value;
                     colTotals[c] += value;
                 }
-
                 grandTotal += rowTotal;
                 Console.WriteLine($"{rowTotal,8}"); // перехід на новий рядок — після внутрішнього циклу
             }
@@ -169,7 +156,7 @@ namespace Theatre
             Console.WriteLine($"{grandTotal,8}");
         }
 
-        // Читає дробове число в межах [min; max]. Питає знову, доки ввід не стане прийнятним.
+        // Читає ціле число в межах [min; max]. Питає знову, доки ввід не стане прийнятним.
         static int ReadInt(string prompt, int min, int max)
         {
             while (true)
@@ -191,6 +178,7 @@ namespace Theatre
             }
         }
 
+        // Читає дробове число в межах [min; max]. Питає знову, доки ввід не стане прийнятним.
         static double ReadDouble(string prompt, double min, double max)
         {
             while (true)
@@ -223,5 +211,6 @@ namespace Theatre
             Console.WriteLine();
             PrintRevenueTable(from, to, step);
         }
+        // Лабораторна 8: розкладання меню на методи
     }
 }
