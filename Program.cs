@@ -24,7 +24,7 @@ namespace Theatre
                         Pause();
                         break;
                     case "2":
-                        PrintRevenueTable(150, 250, 12.5);
+                        ShowRevenueTable();
                         Pause();
                         break;
                     case "3":
@@ -212,6 +212,16 @@ namespace Theatre
                 return value;
             }
 
+        }
+
+        // питає межі й крок, далі віддає їх методу табулювання
+        static void ShowRevenueTable()
+        {
+            double from = ReadDouble("Початкова ціна квитка", 1, 1000);
+            double to = ReadDouble("Кінцева ціна квитка", 1, 1000);
+            double step = ReadDouble("Крок ціни", 0.5, 500);
+            Console.WriteLine();
+            PrintRevenueTable(from, to, step);
         }
     }
 }
