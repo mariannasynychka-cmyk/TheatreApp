@@ -32,6 +32,7 @@ namespace Theatre
                         Console.WriteLine($"Елементів у масиві: {count}");
                         Pause();
                         break;
+                    case "5": PrintValues(values, count); Pause(); break;
                     case "0":
                         running = false; // а не break: break завершив би лише case
                         Console.WriteLine("До побачення.");
@@ -51,6 +52,7 @@ namespace Theatre
             Console.WriteLine("2 — таблиця виторгу залежно від ціни квитка");
             Console.WriteLine("3 — кількість вистав за жанрами і днями тижня");
             Console.WriteLine("4 — додати ціну квитка");
+            Console.WriteLine("5 — показати ціни квитків");
             Console.WriteLine("0 — вихід");
             Console.Write("Ваш вибір: ");
         }
@@ -235,6 +237,21 @@ namespace Theatre
             }
             values[count] = newValue;
             count++;
+        }
+
+        // Виводить перші count елементів таблицею з номерами. З клавіатури нічого не читає.
+        static void PrintValues(double[] values, int count)
+        {
+            if (count == 0)
+            {
+                Console.WriteLine("Масив порожній.");
+                return;
+            }
+            Console.WriteLine($"{"№",4}{"Ціна",10}");
+            for (int i = 0; i < count; i++)
+            {
+                Console.WriteLine($"{i + 1,4}{values[i],10:F2}");
+            }
         }
     }
 }
