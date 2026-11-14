@@ -252,6 +252,7 @@ namespace Theatre
             {
                 Console.WriteLine($"{i + 1,4}{values[i],10:F2}");
             }
+
         }
     }
 }
