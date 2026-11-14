@@ -11,6 +11,10 @@ namespace Theatre
             Console.OutputEncoding = Encoding.UTF8;
             bool running = true; // єдиний спосіб вийти з циклу меню
 
+            const int capacity = 100;               // місткість масиву
+            double[] values = new double[capacity]; // ціни квитків
+            int count = 0;                          // скільки місць зайнято
+
             while (running)
             {
                 ShowMenu();
@@ -22,6 +26,12 @@ namespace Theatre
                     case "1": ShowAbout(); Pause(); break;
                     case "2": ShowRevenueTable(); Pause(); break;
                     case "3": ShowGenreTable(); Pause(); break;
+                    case "4":
+                        double newValue = ReadDouble("Ціна квитка", 0, 10000);
+                        AddValue(values, ref count, newValue, capacity);
+                        Console.WriteLine($"Елементів у масиві: {count}");
+                        Pause();
+                        break;
                     case "0":
                         running = false; // а не break: break завершив би лише case
                         Console.WriteLine("До побачення.");
@@ -40,6 +50,7 @@ namespace Theatre
             Console.WriteLine("1 — довідка");
             Console.WriteLine("2 — таблиця виторгу залежно від ціни квитка");
             Console.WriteLine("3 — кількість вистав за жанрами і днями тижня");
+            Console.WriteLine("4 — додати ціну квитка");
             Console.WriteLine("0 — вихід");
             Console.Write("Ваш вибір: ");
         }
@@ -212,5 +223,18 @@ namespace Theatre
             PrintRevenueTable(from, to, step);
         }
         // Лабораторна 8: розкладання меню на методи
+
+        // Додає значення в кінець масиву. Масив іде без ref
+        // лічильник — з ref, щоб зміна була видна в Main.
+        static void AddValue(double[] values, ref int count, double newValue, int capacity)
+        {
+            if (count == capacity)
+            {
+                Console.WriteLine("Місця більше немає.");
+                return;
+            }
+            values[count] = newValue;
+            count++;
+        }
     }
 }
