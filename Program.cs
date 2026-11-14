@@ -33,6 +33,12 @@ namespace Theatre
                         Pause();
                         break;
                     case "5": PrintValues(values, count); Pause(); break;
+                    case "6":
+                        int number = ReadInt("Номер для видалення", 1, capacity);
+                        RemoveAt(values, ref count, number - 1); // номер для людини з 1, індекс з 0
+                        Console.WriteLine($"Елементів у масиві: {count}");
+                        Pause();
+                        break;
                     case "0":
                         running = false; // а не break: break завершив би лише case
                         Console.WriteLine("До побачення.");
@@ -53,6 +59,7 @@ namespace Theatre
             Console.WriteLine("3 — кількість вистав за жанрами і днями тижня");
             Console.WriteLine("4 — додати ціну квитка");
             Console.WriteLine("5 — показати ціни квитків");
+            Console.WriteLine("6 — видалити ціну за номером");
             Console.WriteLine("0 — вихід");
             Console.Write("Ваш вибір: ");
         }
@@ -253,6 +260,23 @@ namespace Theatre
                 Console.WriteLine($"{i + 1,4}{values[i],10:F2}");
             }
 
+        }
+
+        // Видаляє елемент з індексом index, зсуває решту вліво й зменшує лічильник.
+        // Неправильний індекс - повідомлення й вихід без змін.
+        static void RemoveAt(double[] values, ref int count, int index)
+        {
+            if (index < 0 || index >= count)
+            {
+                Console.WriteLine($"Помилка: елемента з номером {index + 1} немає. Нічого не змінено.");
+                return;
+            }
+            for (int i = index; i < count - 1; i++)
+            {
+                values[i] = values[i + 1];
+            }
+            count--;
+            values[count] = 0; // очищаємо звільнену комірку
         }
     }
 }
