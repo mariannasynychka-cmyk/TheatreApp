@@ -4,8 +4,6 @@ namespace Theatre
 {
     internal class Program
     {
-        const int GenreCount = 5; // Скільки жанрів і днів є в таблиці з двома  входами
-        const int DayCount = 7;
         static void Main(string[] args)
         {
             Console.OutputEncoding = Encoding.UTF8;
@@ -132,6 +130,8 @@ namespace Theatre
         // питає розміри таблиці й віддає їх методу, що її будує
         static void ShowGenreTable()
         {
+            const int GenreCount = 5; // Скільки жанрів і днів є в таблиці з двома  входами
+            const int DayCount = 7;
             int rows = ReadInt("Скільки жанрів (рядків)", 1, GenreCount);
             int cols = ReadInt("Скільки днів (стовпців)", 1, DayCount);
             Console.WriteLine();
