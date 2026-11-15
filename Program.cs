@@ -39,6 +39,7 @@ namespace Theatre
                         Console.WriteLine($"Елементів у масиві: {count}");
                         Pause();
                         break;
+                    case "7": ShowStatistics(values, count); Pause(); break;
                     case "0":
                         running = false; // а не break: break завершив би лише case
                         Console.WriteLine("До побачення.");
@@ -60,6 +61,7 @@ namespace Theatre
             Console.WriteLine("4 — додати ціну квитка");
             Console.WriteLine("5 — показати ціни квитків");
             Console.WriteLine("6 — видалити ціну за номером");
+            Console.WriteLine("7 — показати статистику цін");
             Console.WriteLine("0 — вихід");
             Console.Write("Ваш вибір: ");
         }
@@ -277,6 +279,55 @@ namespace Theatre
             }
             count--;
             values[count] = 0; // очищаємо звільнену комірку
+        }
+
+        // Повертає через out суму й середнє. Для порожнього набору середнє — 0, а не NaN.
+        static void Statistics(double[] values, int count, out double sum, out double average)
+        {
+            sum = 0;
+            for (int i = 0; i < count; i++)
+            {
+                sum += values[i];
+            }
+            average = count > 0 ? sum / count : 0;
+        }
+
+        // Повертає через out найбільше значення та його індекс.
+        // Порожній набір: max = 0, maxIndex = -1 (викликач це перевіряє окремо).
+        static void FindMax(double[] values, int count, out double max, out int maxIndex)
+        {
+            if (count == 0)
+            {
+                max = 0;
+                maxIndex = -1;
+                return;
+            }
+            max = values[0];
+            maxIndex = 0;
+            for (int i = 1; i < count; i++)
+            {
+                if (values[i] > max)
+                {
+                    max = values[i];
+                    maxIndex = i;
+                }
+            }
+        }
+
+        // Виводить статистику цін. Порожній набір обробляється окремо.
+        static void ShowStatistics(double[] values, int count)
+        {
+            if (count == 0)
+            {
+                Console.WriteLine("Масив порожній, статистики немає.");
+                return;
+            }
+            Statistics(values, count, out double sum, out double average);
+            FindMax(values, count, out double max, out int maxIndex);
+            Console.WriteLine($"Елементів: {count}");
+            Console.WriteLine($"Сума: {sum:F2}");
+            Console.WriteLine($"Середнє: {average:F2}");
+            Console.WriteLine($"Найбільше: {max:F2} (номер {maxIndex + 1})");
         }
     }
 }
