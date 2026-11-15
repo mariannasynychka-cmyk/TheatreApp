@@ -40,6 +40,7 @@ namespace Theatre
                         Pause();
                         break;
                     case "7": ShowStatistics(values, count); Pause(); break;
+                    case "8": RunExperiment(); Pause(); break;
                     case "0":
                         running = false; // а не break: break завершив би лише case
                         Console.WriteLine("До побачення.");
@@ -62,6 +63,7 @@ namespace Theatre
             Console.WriteLine("5 — показати ціни квитків");
             Console.WriteLine("6 — видалити ціну за номером");
             Console.WriteLine("7 — показати статистику цін");
+            Console.WriteLine("8 — дослід: значиме й посилальне");
             Console.WriteLine("0 — вихід");
             Console.Write("Ваш вибір: ");
         }
@@ -328,6 +330,35 @@ namespace Theatre
             Console.WriteLine($"Сума: {sum:F2}");
             Console.WriteLine($"Середнє: {average:F2}");
             Console.WriteLine($"Найбільше: {max:F2} (номер {maxIndex + 1})");
+        }
+        // Спроба змінити int без ref: міняється лише копія
+        static void TryChangeInt(int value)
+        {
+            value = value + 100;
+        }
+
+        // Зміна елемента масиву: масив посилальний, тому зміна видна ззовні
+        static void ChangeArrayElement(double[] prices)
+        {
+            prices[0] = prices[0] + 100;
+        }
+
+        // Дослід: різниця між значимим і посилальним типом
+        static void RunExperiment()
+        {
+            int price = 50;
+            double[] prices = { 50, 70, 90 };
+
+            Console.WriteLine("До виклику:");
+            Console.WriteLine($"  int price = {price}");
+            Console.WriteLine($"  prices[0] = {prices[0]}");
+
+            TryChangeInt(price);
+            ChangeArrayElement(prices);
+
+            Console.WriteLine("Після виклику:");
+            Console.WriteLine($"  int price = {price} (метод змінив лише копію)");
+            Console.WriteLine($"  prices[0] = {prices[0]} (змінено сам масив)");
         }
     }
 }
