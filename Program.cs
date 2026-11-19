@@ -9,9 +9,19 @@ namespace Theatre
             Console.OutputEncoding = Encoding.UTF8;
             bool running = true; // єдиний спосіб вийти з циклу меню
 
-            const int capacity = 100;               // місткість масиву
-            double[] values = new double[capacity]; // ціни квитків
-            int count = 0;                          // скільки місць зайнято
+            // Сховище вистав: паралельні масиви, по одному на кожне поле запису.
+            // Запис номер i — це значення з індексом i в усіх масивах.
+            const int Capacity = 100;                      // місткість сховища, не змінюється
+            int[] ids = new int[Capacity];                 // код вистави (призначає програма)
+            string[] titles = new string[Capacity];        // назва
+            int[] genreIds = new int[Capacity];            // код жанру (поки що вводиться числом)
+            string[] directors = new string[Capacity];     // режисер
+            DateTime[] dates = new DateTime[Capacity];     // дата й час
+            int[] durations = new int[Capacity];           // тривалість, хвилин
+            double[] prices = new double[Capacity];        // ціна квитка
+            int[] sold = new int[Capacity];                // продано квитків
+            int count = 0;                                 // скільки місць зайнято
+            int nextId = 1;                                // наступний код вистави 
 
             while (running)
             {
@@ -21,24 +31,22 @@ namespace Theatre
 
                 switch (choice)
                 {
-                    case "1": ShowAbout(); Pause(); break;
-                    case "2": ShowRevenueTable(); Pause(); break;
-                    case "3": ShowGenreTable(); Pause(); break;
+                    case "1": Console.WriteLine("Поки не зроблено."); Pause(); break;
+                    case "2": Console.WriteLine("Поки не зроблено."); Pause(); break;
+                    case "3":
                     case "4":
-                        double newValue = ReadDouble("Ціна квитка", 0, 10000);
-                        AddValue(values, ref count, newValue, capacity);
-                        Console.WriteLine($"Елементів у масиві: {count}");
-                        Pause();
-                        break;
-                    case "5": PrintValues(values, count); Pause(); break;
+                    case "5":
                     case "6":
-                        int number = ReadInt("Номер для видалення", 1, capacity);
-                        RemoveAt(values, ref count, number - 1); // номер для людини з 1, індекс з 0
-                        Console.WriteLine($"Елементів у масиві: {count}");
+                    case "7":
+                    case "8":
+                    case "9":
+                        Console.WriteLine("Поки не зроблено.");
                         Pause();
                         break;
-                    case "7": ShowStatistics(values, count); Pause(); break;
-                    case "8": RunExperiment(); Pause(); break;
+                    case "10": Console.WriteLine("Поки не зроблено."); Pause(); break;
+                    case "11": ShowAbout(); Pause(); break;
+                    case "12": ShowRevenueTable(); Pause(); break;
+                    case "13": ShowGenreTable(); Pause(); break;
                     case "0":
                         running = false; // а не break: break завершив би лише case
                         Console.WriteLine("До побачення.");
@@ -54,14 +62,19 @@ namespace Theatre
         static void ShowMenu() // Виводить головне меню
         {
             Console.WriteLine("=== Театр ===");
-            Console.WriteLine("1 — довідка");
-            Console.WriteLine("2 — таблиця виторгу залежно від ціни квитка");
-            Console.WriteLine("3 — кількість вистав за жанрами і днями тижня");
-            Console.WriteLine("4 — додати ціну квитка");
-            Console.WriteLine("5 — показати ціни квитків");
-            Console.WriteLine("6 — видалити ціну за номером");
-            Console.WriteLine("7 — показати статистику цін");
-            Console.WriteLine("8 — дослід: значиме й посилальне");
+            Console.WriteLine("1 — показати всі вистави");
+            Console.WriteLine("2 — додати виставу");
+            Console.WriteLine("3 — знайти за умовою");
+            Console.WriteLine("4 — змінити виставу");
+            Console.WriteLine("5 — видалити виставу");
+            Console.WriteLine("6 — зведена таблиця");
+            Console.WriteLine("7 — зберегти у файл");
+            Console.WriteLine("8 — завантажити з файлу");
+            Console.WriteLine("9 — експорт у CSV");
+            Console.WriteLine("10 — заповнити тестовими виставами");
+            Console.WriteLine("11 — довідка");
+            Console.WriteLine("12 — таблиця виторгу залежно від ціни квитка");
+            Console.WriteLine("13 — кількість вистав за жанрами і днями тижня");
             Console.WriteLine("0 — вихід");
             Console.Write("Ваш вибір: ");
         }
