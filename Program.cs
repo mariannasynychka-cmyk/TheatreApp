@@ -1,4 +1,5 @@
 ﻿using System.Text;
+using System.Globalization;
 
 namespace Theatre
 {
@@ -32,7 +33,8 @@ namespace Theatre
                 switch (choice)
                 {
                     case "1": Console.WriteLine("Поки не зроблено."); Pause(); break;
-                    case "2": Console.WriteLine("Поки не зроблено."); Pause(); break;
+                    case "2":AddPerformance(ids, titles, genreIds, directors, dates, durations, prices, sold,
+                                       ref count, ref nextId, Capacity); Pause(); break;
                     case "3":
                     case "4":
                     case "5":
@@ -249,6 +251,79 @@ namespace Theatre
             PrintRevenueTable(from, to, step);
         }
         // Лабораторна 8: розкладання меню на методи
+
+        // Читає текст не коротший за minLength символів (після Trim). Питає знову, доки ввід не стане прийнятним.
+        static string ReadText(string prompt, int minLength)
+        {
+            while (true)
+            {
+                Console.Write(prompt);
+                string? input = Console.ReadLine();
+                string text = input == null ? "" : input.Trim();
+
+                if (text.Length < minLength)
+                {
+                    Console.WriteLine($"Помилка: текст має містити не менше {minLength} символів. Спробуйте ще раз.");
+                    continue;
+                }
+                return text;
+            }
+        }
+
+        // Читає дату й час у форматі дд.мм.рррр гг:хх. Питає знову, доки ввід не стане прийнятним.
+        static DateTime ReadDateTime(string prompt)
+        {
+            while (true)
+            {
+                Console.Write(prompt);
+                string? input = Console.ReadLine();
+
+                if (DateTime.TryParseExact(input, "dd.MM.yyyy HH:mm", CultureInfo.InvariantCulture,
+                                           DateTimeStyles.None, out DateTime value))
+                {
+                    return value;
+                }
+                Console.WriteLine("Помилка: потрібен формат дд.мм.рррр гг:хх, наприклад 25.12.2026 19:00.");
+            }
+        }
+
+        // Додає виставу в сховище. Усі поля спершу збираються в локальні змінні
+        // й лише потім пишуться в масиви. Масиви йдуть без ref (вони посилальні),
+        // лічильники count і nextId — з ref, щоб зміна була видна в Main.
+        static void AddPerformance(int[] ids, string[] titles, int[] genreIds, string[] directors,
+                                   DateTime[] dates, int[] durations, double[] prices, int[] sold,
+                                   ref int count, ref int nextId, int capacity)
+        {
+            // Перевірка на заповненість — до того, як питати поля
+            if (count == capacity)
+            {
+                Console.WriteLine("Сховище заповнене, видаліть щось зайве.");
+                return;
+            }
+
+            string title = ReadText("Назва: ", 2);
+            Console.WriteLine("Жанри: 1 — Драма, 2 — Комедія, 3 — Мюзикл, 4 — Трагедія, 5 — Казка");
+            int genreId = ReadInt("Код жанру", 1, 5);
+            string director = ReadText("Режисер: ", 2);
+            DateTime date = ReadDateTime("Дата й час (дд.мм.рррр гг:хх): ");
+            int duration = ReadInt("Тривалість, хв", 1, 600);
+            double price = ReadDouble("Ціна квитка", 0, 10000);
+            int ticketsSold = ReadInt("Продано квитків", 0, 10000);
+
+            // Усі масиви заповнюються в одному місці, під одним індексом count
+            ids[count] = nextId;
+            titles[count] = title;
+            genreIds[count] = genreId;
+            directors[count] = director;
+            dates[count] = date;
+            durations[count] = duration;
+            prices[count] = price;
+            sold[count] = ticketsSold;
+            count++;  // лічильники збільшуємо після присвоєнь
+            nextId++;
+
+            Console.WriteLine($"Додано виставу №{ids[count - 1]}.");
+        }
 
         // Додає значення в кінець масиву. Масив іде без ref
         // лічильник — з ref, щоб зміна була видна в Main.
