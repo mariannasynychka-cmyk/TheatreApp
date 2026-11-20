@@ -32,7 +32,9 @@ namespace Theatre
 
                 switch (choice)
                 {
-                    case "1": Console.WriteLine("Поки не зроблено."); Pause(); break;
+                    case "1":
+                        PrintPerformances(ids, titles, genreIds, directors, dates, durations, prices, sold, count);
+                        Pause(); break;
                     case "2":AddPerformance(ids, titles, genreIds, directors, dates, durations, prices, sold,
                                        ref count, ref nextId, Capacity); Pause(); break;
                     case "3":
@@ -447,6 +449,24 @@ namespace Theatre
             Console.WriteLine("Після виклику:");
             Console.WriteLine($"  int price = {price} (метод змінив лише копію)");
             Console.WriteLine($"  prices[0] = {prices[0]} (змінено сам масив)");
+        }
+
+        // Виводить перші count вистав таблицею. З клавіатури нічого не читає.
+        static void PrintPerformances(int[] ids, string[] titles, int[] genreIds, string[] directors,
+                                      DateTime[] dates, int[] durations, double[] prices, int[] sold, int count)
+        {
+            if (count == 0)
+            {
+                Console.WriteLine("Записів поки немає.");
+                return;
+            }
+
+            Console.WriteLine($"{"№",4}{"Назва",-26}{"Жанр",6}  {"Режисер",-18}{"Дата й час",-18}{"Хв",5}{"Ціна",10}{"Продано",9}");
+            for (int i = 0; i < count; i++) // до count, а не до ids.Length
+            {
+                Console.WriteLine($"{ids[i],4}{titles[i],-26}{genreIds[i],6}  {directors[i],-18}{dates[i],-18:dd.MM.yyyy HH:mm}{durations[i],5}{prices[i],10:F2}{sold[i],9}");
+            }
+            Console.WriteLine($"\nЗаписів: {count}.");
         }
     }
 }
