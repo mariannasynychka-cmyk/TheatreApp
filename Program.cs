@@ -453,7 +453,7 @@ namespace Theatre
             Console.WriteLine($"  prices[0] = {prices[0]} (змінено сам масив)");
         }
 
-        // Виводить перші count вистав таблицею. З клавіатури нічого не читає.
+        // Виводить перші count вистав таблицею й підсумки під нею. З клавіатури нічого не читає.
         static void PrintPerformances(int[] ids, string[] titles, int[] genreIds, string[] directors,
                                       DateTime[] dates, int[] durations, double[] prices, int[] sold, int count)
         {
@@ -469,6 +469,12 @@ namespace Theatre
                 Console.WriteLine($"{ids[i],4}{titles[i],-26}{genreIds[i],6}  {directors[i],-18}{dates[i],-18:dd.MM.yyyy HH:mm}{durations[i],5}{prices[i],10:F2}{sold[i],9}");
             }
             Console.WriteLine($"\nЗаписів: {count}.");
+
+            // Підсумок теми: найкасовіші вистави сезону. Рахують окремі методи, друкуємо тут.
+            double total = CalculateTotalRevenue(prices, sold, count);
+            int top = FindTopRevenueIndex(prices, sold, count);
+            Console.WriteLine($"Загальний виторг сезону: {total:F2}");
+            Console.WriteLine($"Найкасовіша вистава: {titles[top]} ({CalculateRevenue(prices[top], sold[top]):F2})");
         }
 
         // Заповнює сховище готовими виставами без запитань, щоб не вводити їх руками.
@@ -515,6 +521,40 @@ namespace Theatre
                 added++;
             }
             Console.WriteLine($"Додано тестових вистав: {added}.");
+        }
+
+        // Повертає загальний виторг: сума «ціна × продано» по перших count виставах.
+        // Нічого не виводить. Для порожнього сховища повертає 0.
+        static double CalculateTotalRevenue(double[] prices, int[] sold, int count)
+        {
+            double total = 0;
+            for (int i = 0; i < count; i++)
+            {
+                total += CalculateRevenue(prices[i], sold[i]);
+            }
+            return total;
+        }
+
+        // Повертає індекс найкасовішої вистави. Нічого не виводить.
+        // Для порожнього сховища повертає -1 (викликач це перевіряє окремо).
+        static int FindTopRevenueIndex(double[] prices, int[] sold, int count)
+        {
+            if (count == 0)
+            {
+                return -1;
+            }
+            int best = 0;
+            double bestRevenue = CalculateRevenue(prices[0], sold[0]);
+            for (int i = 1; i < count; i++)
+            {
+                double revenue = CalculateRevenue(prices[i], sold[i]);
+                if (revenue > bestRevenue)
+                {
+                    bestRevenue = revenue;
+                    best = i;
+                }
+            }
+            return best;
         }
     }
 }
