@@ -47,7 +47,9 @@ namespace Theatre
                         Console.WriteLine("Поки не зроблено.");
                         Pause();
                         break;
-                    case "10": Console.WriteLine("Поки не зроблено."); Pause(); break;
+                    case "10":
+                        FillSampleData(ids, titles, genreIds, directors, dates, durations, prices, sold,
+                                       ref count, ref nextId, Capacity); Pause(); break;
                     case "11": ShowAbout(); Pause(); break;
                     case "12": ShowRevenueTable(); Pause(); break;
                     case "13": ShowGenreTable(); Pause(); break;
@@ -467,6 +469,52 @@ namespace Theatre
                 Console.WriteLine($"{ids[i],4}{titles[i],-26}{genreIds[i],6}  {directors[i],-18}{dates[i],-18:dd.MM.yyyy HH:mm}{durations[i],5}{prices[i],10:F2}{sold[i],9}");
             }
             Console.WriteLine($"\nЗаписів: {count}.");
+        }
+
+        // Заповнює сховище готовими виставами без запитань, щоб не вводити їх руками.
+        static void FillSampleData(int[] ids, string[] titles, int[] genreIds, string[] directors,
+                                   DateTime[] dates, int[] durations, double[] prices, int[] sold,
+                                   ref int count, ref int nextId, int capacity)
+        {
+            string[] sampleTitles = { "Лісова пісня", "Мірандоліна", "Ніч перед Різдвом",
+                                      "Едіп-цар", "Снігова королева", "Лис Микита" };
+            int[] sampleGenres = { 1, 2, 3, 4, 5, 5 };
+            string[] sampleDirectors = { "Коваль І.", "Мельник О.", "Шевчук Л.",
+                                         "Коваль І.", "Бондар Н.", "Бондар Н." };
+            DateTime[] sampleDates =
+            {
+                new DateTime(2026, 12, 15, 19, 0, 0),
+                new DateTime(2026, 12, 16, 18, 30, 0),
+                new DateTime(2026, 12, 19, 17, 0, 0),
+                new DateTime(2026, 12, 21, 19, 0, 0),
+                new DateTime(2026, 12, 26, 12, 0, 0),
+                new DateTime(2026, 12, 27, 12, 0, 0)
+            };
+            int[] sampleDurations = { 130, 120, 150, 110, 90, 75 };
+            double[] samplePrices = { 250, 200, 320, 280, 150, 120 };
+            int[] sampleSold = { 87, 110, 140, 64, 180, 95 };
+
+            int added = 0;
+            for (int i = 0; i < sampleTitles.Length; i++)
+            {
+                if (count == capacity)
+                {
+                    Console.WriteLine("Сховище заповнене, решту не додано.");
+                    break;
+                }
+                ids[count] = nextId;
+                titles[count] = sampleTitles[i];
+                genreIds[count] = sampleGenres[i];
+                directors[count] = sampleDirectors[i];
+                dates[count] = sampleDates[i];
+                durations[count] = sampleDurations[i];
+                prices[count] = samplePrices[i];
+                sold[count] = sampleSold[i];
+                count++;
+                nextId++;
+                added++;
+            }
+            Console.WriteLine($"Додано тестових вистав: {added}.");
         }
     }
 }
