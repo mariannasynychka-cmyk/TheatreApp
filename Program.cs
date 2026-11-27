@@ -463,10 +463,10 @@ namespace Theatre
                 return;
             }
 
-            Console.WriteLine($"{"№",4}{"Назва",-26}{"Жанр",6}  {"Режисер",-18}{"Дата й час",-18}{"Хв",5}{"Ціна",10}{"Продано",9}");
+            PrintPerformanceHeader();
             for (int i = 0; i < count; i++) // до count, а не до ids.Length
             {
-                Console.WriteLine($"{ids[i],4}{titles[i],-26}{genreIds[i],6}  {directors[i],-18}{dates[i],-18:dd.MM.yyyy HH:mm}{durations[i],5}{prices[i],10:F2}{sold[i],9}");
+                PrintPerformanceRow(ids, titles, genreIds, directors, dates, durations, prices, sold, i);
             }
             Console.WriteLine($"\nЗаписів: {count}.");
 
@@ -475,6 +475,32 @@ namespace Theatre
             int top = FindTopRevenueIndex(prices, sold, count);
             Console.WriteLine($"Загальний виторг сезону: {total:F2}");
             Console.WriteLine($"Найкасовіша вистава: {titles[top]} ({CalculateRevenue(prices[top], sold[top]):F2})");
+        }
+
+        // Друкує шапку таблиці вистав. Нічого не читає.
+        static void PrintPerformanceHeader()
+        {
+            Console.WriteLine($"{"№",4}{"Назва",-26}{"Жанр",6}  {"Режисер",-18}{"Дата й час",-18}{"Хв",5}{"Ціна",10}{"Продано",9}");
+        }
+
+        // Друкує один рядок таблиці: виставу з індексом i.
+        static void PrintPerformanceRow(int[] ids, string[] titles, int[] genreIds, string[] directors,
+                                        DateTime[] dates, int[] durations, double[] prices, int[] sold, int i)
+        {
+            Console.WriteLine($"{ids[i],4}{titles[i],-26}{genreIds[i],6}  {directors[i],-18}{dates[i],-18:dd.MM.yyyy HH:mm}{durations[i],5}{prices[i],10:F2}{sold[i],9}");
+        }
+
+        // Лінійний пошук за номером: повертає індекс або -1, якщо такого номера немає.
+        static int FindIndexById(int[] ids, int count, int id)
+        {
+            for (int i = 0; i < count; i++)
+            {
+                if (ids[i] == id)
+                {
+                    return i; // знайшли — виходимо одразу
+                }
+            }
+            return -1; // дійшли до кінця, нічого немає
         }
 
         // Заповнює сховище готовими виставами без запитань, щоб не вводити їх руками.
