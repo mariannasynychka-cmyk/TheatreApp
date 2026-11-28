@@ -42,6 +42,9 @@ namespace Theatre
                         Pause();
                         break;
                     case "4":
+                        UpdatePerformance(ids, titles, genreIds, directors, dates, durations, prices, sold, count);
+                        Pause();
+                        break;
                     case "5":
                     case "6":
                     case "7":
@@ -541,5 +544,142 @@ namespace Theatre
                 SearchByPriceRange(ids, titles, genreIds, directors, dates, durations, prices, sold, count);
             }
         }
+
+        // Читає текст; порожній Enter лишає поточне значення, інакше перевіряє довжину.
+        static string ReadTextKeep(string prompt, string current, int minLength)
+        {
+            while (true)
+            {
+                Console.Write($"{prompt} [{current}]: ");
+                string? input = Console.ReadLine();
+                string text = input == null ? "" : input.Trim();
+
+                if (text.Length == 0)
+                {
+                    return current; // порожній Enter — поле без змін
+                }
+                if (text.Length < minLength)
+                {
+                    Console.WriteLine($"Помилка: текст має містити не менше {minLength} символів. Спробуйте ще раз.");
+                    continue;
+                }
+                return text;
+            }
+        }
+
+        // Читає ціле число; порожній Enter лишає поточне значення.
+        static int ReadIntKeep(string prompt, int current, int min, int max)
+        {
+            while (true)
+            {
+                Console.Write($"{prompt} [{current}] ({min}–{max}): ");
+                string? input = Console.ReadLine();
+                string text = input == null ? "" : input.Trim();
+
+                if (text.Length == 0)
+                {
+                    return current;
+                }
+                if (!int.TryParse(text, out int value))
+                {
+                    Console.WriteLine("Помилка: це не ціле число. Спробуйте ще раз.");
+                    continue;
+                }
+                if (value < min || value > max)
+                {
+                    Console.WriteLine($"Помилка: число має бути від {min} до {max}. Спробуйте ще раз.");
+                    continue;
+                }
+                return value;
+            }
+        }
+
+        // Читає дробове число; порожній Enter лишає поточне значення.
+        static double ReadDoubleKeep(string prompt, double current, double min, double max)
+        {
+            while (true)
+            {
+                Console.Write($"{prompt} [{current}] ({min}–{max}): ");
+                string? input = Console.ReadLine();
+                string text = input == null ? "" : input.Trim();
+
+                if (text.Length == 0)
+                {
+                    return current;
+                }
+                if (!double.TryParse(text, out double value))
+                {
+                    Console.WriteLine("Помилка: це не число. Спробуйте ще раз.");
+                    continue;
+                }
+                if (!(value >= min && value <= max)) // через заперечення, щоб відсіяти й NaN
+                {
+                    Console.WriteLine($"Помилка: число має бути від {min} до {max}. Спробуйте ще раз.");
+                    continue;
+                }
+                return value;
+            }
+        }
+
+        // Читає дату й час; порожній Enter лишає поточне значення.
+        static DateTime ReadDateTimeKeep(string prompt, DateTime current)
+        {
+            while (true)
+            {
+                Console.Write($"{prompt} [{current:dd.MM.yyyy HH:mm}] (дд.мм.рррр гг:хх): ");
+                string? input = Console.ReadLine();
+                string text = input == null ? "" : input.Trim();
+
+                if (text.Length == 0)
+                {
+                    return current;
+                }
+                if (DateTime.TryParseExact(text, "dd.MM.yyyy HH:mm", CultureInfo.InvariantCulture,
+                                           DateTimeStyles.None, out DateTime value))
+                {
+                    return value;
+                }
+                Console.WriteLine("Помилка: потрібен формат дд.мм.рррр гг:хх, наприклад 25.12.2026 19:00.");
+            }
+        }
+
+        // Зміна вистави за номером. Показує поточні значення в підказках, порожній Enter
+        // лишає поле без змін. Номер вистави не редагується.
+        static void UpdatePerformance(int[] ids, string[] titles, int[] genreIds, string[] directors,
+                                      DateTime[] dates, int[] durations, double[] prices, int[] sold, int count)
+        {
+            if (count == 0)
+            {
+                Console.WriteLine("Сховище порожнє.");
+                return;
+            }
+            int id = ReadInt("Номер вистави", 1, 1000000);
+            int index = FindIndexById(ids, count, id);
+            if (index == -1)
+            {
+                Console.WriteLine($"Вистави №{id} немає.");
+                return;
+            }
+
+            Console.WriteLine($"Зміна вистави №{id}. Порожній Enter лишає поле без змін.");
+            // Спершу збираємо нові значення в локальні змінні й лише потім пишемо в масиви
+            string title = ReadTextKeep("Назва", titles[index], 2);
+            int genreId = ReadIntKeep("Код жанру", genreIds[index], 1, 5);
+            string director = ReadTextKeep("Режисер", directors[index], 2);
+            DateTime date = ReadDateTimeKeep("Дата й час", dates[index]);
+            int duration = ReadIntKeep("Тривалість, хв", durations[index], 1, 600);
+            double price = ReadDoubleKeep("Ціна квитка", prices[index], 0, 10000);
+            int ticketsSold = ReadIntKeep("Продано квитків", sold[index], 0, 10000);
+
+            titles[index] = title;
+            genreIds[index] = genreId;
+            directors[index] = director;
+            dates[index] = date;
+            durations[index] = duration;
+            prices[index] = price;
+            sold[index] = ticketsSold;
+            Console.WriteLine($"Виставу №{id} змінено.");
+        }
+
     }
 }
