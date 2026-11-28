@@ -38,6 +38,9 @@ namespace Theatre
                     case "2":AddPerformance(ids, titles, genreIds, directors, dates, durations, prices, sold,
                                        ref count, ref nextId, Capacity); Pause(); break;
                     case "3":
+                        FindPerformances(ids, titles, genreIds, directors, dates, durations, prices, sold, count);
+                        Pause();
+                        break;
                     case "4":
                     case "5":
                     case "6":
@@ -456,6 +459,87 @@ namespace Theatre
                 }
             }
             return best;
+        }
+
+        // Пошук за частиною назви: виводить усі збіги таблицею й кількість знайденого
+        // Поки що пошук чутливий до регістру
+        static void SearchByTitle(int[] ids, string[] titles, int[] genreIds, string[] directors,
+                                  DateTime[] dates, int[] durations, double[] prices, int[] sold, int count)
+        {
+            string query = ReadText("Частина назви: ", 2);
+            int found = 0; // накопичувач оголошено до циклу
+            for (int i = 0; i < count; i++)
+            {
+                if (titles[i].Contains(query))
+                {
+                    if (found == 0)
+                    {
+                        PrintPerformanceHeader(); // шапка — перед першим збігом
+                    }
+                    PrintPerformanceRow(ids, titles, genreIds, directors, dates, durations, prices, sold, i);
+                    found++;
+                }
+            }
+            if (found == 0)
+            {
+                Console.WriteLine($"За запитом «{query}» нічого не знайдено.");
+                return;
+            }
+            Console.WriteLine($"\nЗнайдено: {found}.");
+        }
+
+        // Пошук за діапазоном ціни квитка: від і до, з перевіркою, що від не більше за до
+        static void SearchByPriceRange(int[] ids, string[] titles, int[] genreIds, string[] directors,
+                                       DateTime[] dates, int[] durations, double[] prices, int[] sold, int count)
+        {
+            double priceFrom = ReadDouble("Ціна від", 0, 10000);
+            double priceTo = ReadDouble("Ціна до", 0, 10000);
+            if (priceFrom > priceTo)
+            {
+                Console.WriteLine("Помилка: нижня межа більша за верхню.");
+                return;
+            }
+            int found = 0;
+            for (int i = 0; i < count; i++)
+            {
+                if (prices[i] >= priceFrom && prices[i] <= priceTo)
+                {
+                    if (found == 0)
+                    {
+                        PrintPerformanceHeader();
+                    }
+                    PrintPerformanceRow(ids, titles, genreIds, directors, dates, durations, prices, sold, i);
+                    found++;
+                }
+            }
+            if (found == 0)
+            {
+                Console.WriteLine($"У діапазоні {priceFrom:F2}–{priceTo:F2} вистав немає.");
+                return;
+            }
+            Console.WriteLine($"\nЗнайдено: {found}.");
+        }
+
+        // Пункт меню «знайти за умовою»: питає вид пошуку й викликає потрібний метод
+        static void FindPerformances(int[] ids, string[] titles, int[] genreIds, string[] directors,
+                                     DateTime[] dates, int[] durations, double[] prices, int[] sold, int count)
+        {
+            if (count == 0)
+            {
+                Console.WriteLine("Сховище порожнє.");
+                return;
+            }
+            Console.WriteLine("1 — за частиною назви");
+            Console.WriteLine("2 — за діапазоном ціни квитка");
+            int mode = ReadInt("Вид пошуку", 1, 2);
+            if (mode == 1)
+            {
+                SearchByTitle(ids, titles, genreIds, directors, dates, durations, prices, sold, count);
+            }
+            else
+            {
+                SearchByPriceRange(ids, titles, genreIds, directors, dates, durations, prices, sold, count);
+            }
         }
     }
 }
