@@ -254,7 +254,6 @@ namespace Theatre
             Console.WriteLine();
             PrintRevenueTable(from, to, step);
         }
-        // Лабораторна 8: розкладання меню на методи
 
         // Читає текст не коротший за minLength символів (після Trim). Питає знову, доки ввід не стане прийнятним.
         static string ReadText(string prompt, int minLength)
@@ -327,130 +326,6 @@ namespace Theatre
             nextId++;
 
             Console.WriteLine($"Додано виставу №{ids[count - 1]}.");
-        }
-
-        // Додає значення в кінець масиву. Масив іде без ref
-        // лічильник — з ref, щоб зміна була видна в Main.
-        static void AddValue(double[] values, ref int count, double newValue, int capacity)
-        {
-            if (count == capacity)
-            {
-                Console.WriteLine("Місця більше немає.");
-                return;
-            }
-            values[count] = newValue;
-            count++;
-        }
-
-        // Виводить перші count елементів таблицею з номерами. З клавіатури нічого не читає.
-        static void PrintValues(double[] values, int count)
-        {
-            if (count == 0)
-            {
-                Console.WriteLine("Масив порожній.");
-                return;
-            }
-            Console.WriteLine($"{"№",4}{"Ціна",10}");
-            for (int i = 0; i < count; i++)
-            {
-                Console.WriteLine($"{i + 1,4}{values[i],10:F2}");
-            }
-
-        }
-
-        // Видаляє елемент з індексом index, зсуває решту вліво й зменшує лічильник.
-        // Неправильний індекс - повідомлення й вихід без змін.
-        static void RemoveAt(double[] values, ref int count, int index)
-        {
-            if (index < 0 || index >= count)
-            {
-                Console.WriteLine($"Помилка: елемента з номером {index + 1} немає. Нічого не змінено.");
-                return;
-            }
-            for (int i = index; i < count - 1; i++)
-            {
-                values[i] = values[i + 1];
-            }
-            count--;
-            values[count] = 0; // очищаємо звільнену комірку
-        }
-
-        // Повертає через out суму й середнє. Для порожнього набору середнє — 0, а не NaN.
-        static void Statistics(double[] values, int count, out double sum, out double average)
-        {
-            sum = 0;
-            for (int i = 0; i < count; i++)
-            {
-                sum += values[i];
-            }
-            average = count > 0 ? sum / count : 0;
-        }
-
-        // Повертає через out найбільше значення та його індекс.
-        // Порожній набір: max = 0, maxIndex = -1 (викликач це перевіряє окремо).
-        static void FindMax(double[] values, int count, out double max, out int maxIndex)
-        {
-            if (count == 0)
-            {
-                max = 0;
-                maxIndex = -1;
-                return;
-            }
-            max = values[0];
-            maxIndex = 0;
-            for (int i = 1; i < count; i++)
-            {
-                if (values[i] > max)
-                {
-                    max = values[i];
-                    maxIndex = i;
-                }
-            }
-        }
-
-        // Виводить статистику цін. Порожній набір обробляється окремо.
-        static void ShowStatistics(double[] values, int count)
-        {
-            if (count == 0)
-            {
-                Console.WriteLine("Масив порожній, статистики немає.");
-                return;
-            }
-            Statistics(values, count, out double sum, out double average);
-            FindMax(values, count, out double max, out int maxIndex);
-            Console.WriteLine($"Елементів: {count}");
-            Console.WriteLine($"Сума: {sum:F2}");
-            Console.WriteLine($"Середнє: {average:F2}");
-            Console.WriteLine($"Найбільше: {max:F2} (номер {maxIndex + 1})");
-        }
-        // Спроба змінити int без ref: міняється лише копія
-        static void TryChangeInt(int value)
-        {
-            value = value + 100;
-        }
-
-        // Зміна елемента масиву: масив посилальний, тому зміна видна ззовні
-        static void ChangeArrayElement(double[] prices)
-        {
-            prices[0] = prices[0] + 100;
-        }
-
-        // Дослід: різниця між значимим і посилальним типом
-        static void RunExperiment()
-        {
-            int price = 50;
-            double[] prices = { 50, 70, 90 };
-
-            Console.WriteLine("До виклику:");
-            Console.WriteLine($"  int price = {price}");
-            Console.WriteLine($"  prices[0] = {prices[0]}");
-
-            TryChangeInt(price);
-            ChangeArrayElement(prices);
-
-            Console.WriteLine("Після виклику:");
-            Console.WriteLine($"  int price = {price} (метод змінив лише копію)");
-            Console.WriteLine($"  prices[0] = {prices[0]} (змінено сам масив)");
         }
 
         // Виводить перші count вистав таблицею й підсумки під нею. З клавіатури нічого не читає.
